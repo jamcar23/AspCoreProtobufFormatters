@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ExampleWebApp.Protobufs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -20,5 +21,17 @@ namespace ExampleWebApp.Controllers
 
         [HttpGet("[action]")]
         public IActionResult Empty() => Ok();
+
+        [HttpPost("[action]")]
+        public IActionResult Input([FromBody]ExampleProto proto)
+        {
+            return proto.Equals(ExampleProto.Input) ? Ok() : (IActionResult)BadRequest();
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult Output()
+        {
+            return Ok(ExampleProto.Output);
+        }
     }
 }

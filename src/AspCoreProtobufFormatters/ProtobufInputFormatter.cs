@@ -1,9 +1,11 @@
-﻿using AspCoreProtobufFormatters.Extensions;
+﻿using AspCoreProtobufFormatters.ContentFormatters;
+using AspCoreProtobufFormatters.Extensions;
 using Google.Protobuf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +14,20 @@ namespace AspCoreProtobufFormatters
 {
     public class ProtobufInputFormatter : InputFormatter
     {
-        public ProtobufInputFormatter() : base()
+        private readonly Dictionary<string, IContentReader> _readers = new Dictionary<string, IContentReader>();
+
+        public ProtobufInputFormatter() : this(new ProtobufBinFormatter()) { }
+
+        public ProtobufInputFormatter(params IContentReader[] readers) : base()
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ProtobufFormatterUtils.BinContentType));
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ProtobufFormatterUtils.JsonContentType));
+            if (readers == null) throw new ArgumentNullException(nameof(readers));
+
+            foreach (IContentReader reader in readers)
+            {
+                _readers.Add(reader.SupportedContentType, reader);
+
+                SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(reader.SupportedContentType));
+            }
         }
 
         protected override bool CanReadType(Type type)
@@ -25,28 +37,12 @@ namespace AspCoreProtobufFormatters
 
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
-            Type type = context.ModelType;
             HttpRequest request = context.HttpContext.Request;
-            MessageParser parser = type.GetPropertyValue<MessageParser>("Parser");
+            IContentReader reader = _readers[request.ContentType];
 
-            if (parser == null)
-            {
-                return await InputFormatterResult.FailureAsync();
-            }
+            (bool success, IMessage msg) = await reader.Read(context.ModelType, request.Body);
 
-            byte[] bytes;
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                await request.Body.CopyToAsync(ms);
-
-                bytes = ms.ToArray();
-            }
-
-            IMessage msg = request.ContentType.Equals(ProtobufFormatterUtils.BinContentType) ? parser.ParseFrom(bytes)
-                : parser.ParseJson(Encoding.UTF8.GetString(bytes));
-
-            return await InputFormatterResult.SuccessAsync(msg);
+            return success ? await InputFormatterResult.SuccessAsync(msg) : await InputFormatterResult.FailureAsync();
         }
     }
 }

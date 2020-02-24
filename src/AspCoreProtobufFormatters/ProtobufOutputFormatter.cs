@@ -1,19 +1,30 @@
-﻿using Google.Protobuf;
+﻿using AspCoreProtobufFormatters.ContentFormatters;
+using Google.Protobuf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AspCoreProtobufFormatters
 {
     public class ProtobufOutputFormatter : OutputFormatter
     {
+        private readonly Dictionary<string, IContentWriter> _writers = new Dictionary<string, IContentWriter>();
 
-        public ProtobufOutputFormatter() : base()
+        public ProtobufOutputFormatter() : this(new ProtobufBinFormatter()) { }
+
+        public ProtobufOutputFormatter(params IContentWriter[] writers) : base()
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ProtobufFormatterUtils.BinContentType));
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ProtobufFormatterUtils.JsonContentType));
+            if (writers == null) throw new ArgumentNullException(nameof(writers));
+
+            foreach (IContentWriter writer in writers)
+            {
+                _writers.Add(writer.SupportedContentType, writer);
+
+                SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(writer.SupportedContentType));
+            }
         }
 
         protected override bool CanWriteType(Type type)
@@ -21,17 +32,18 @@ namespace AspCoreProtobufFormatters
             return ProtobufFormatterUtils.IsProtobuf(type);
         }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
             HttpResponse response = context.HttpContext.Response;
 
-            IMessage msg = context.Object as IMessage;
+            IContentWriter writer = _writers[response.ContentType];
 
-            if (msg == null) return Task.CompletedTask;
+            (bool success, byte[] data) = await writer.Write(context.Object);
 
-            byte[] data = msg.ToByteArray();
-
-            return response.Body.WriteAsync(data, 0, data.Length);
+            if (success && data != null)
+            {
+                await response.Body.WriteAsync(data, 0, data.Length);
+            }
         }
     }
 }

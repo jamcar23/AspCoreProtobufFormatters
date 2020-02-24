@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace AspCoreProtobufFormatters.ContentFormatters
 {
+    /// <summary>
+    /// <para>Abstract base protobuf formatter. This is mainly used to reduce common boilerplate code.</para>
+    /// <para>See <see cref="ProtobufBinFormatter"/> or <see cref="ProtobufJsonFormatter"/>.</para>
+    /// <para><inheritdoc/></para>
+    /// </summary>
     public abstract class BaseProtobufFormatter : IContentReader, IContentWriter
     {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string SupportedContentType { get; }
 
         public BaseProtobufFormatter(string supportedContentType)
@@ -17,6 +25,15 @@ namespace AspCoreProtobufFormatters.ContentFormatters
             SupportedContentType = supportedContentType ?? throw new ArgumentNullException(nameof(supportedContentType));
         }
 
+
+        /// <summary>
+        /// <para><inheritdoc/></para>
+        /// <para>
+        /// Note: this implementation provides boilerplate code to get a <see cref="MessageParser"/>
+        /// and read the bytes from the stream. A child class should implement <see cref="ParseBytes(MessageParser, byte[])"/>
+        /// to handle the actual parsing.
+        /// </para>
+        /// </summary>
         public async ValueTask<(bool, IMessage)> Read(Type model, Stream body)
         {
             MessageParser parser = model.GetPropertyValue<MessageParser>("Parser");
@@ -42,6 +59,13 @@ namespace AspCoreProtobufFormatters.ContentFormatters
             return ParseBytes(parser, bytes);
         }
 
+        /// <summary>
+        /// <para><inheritdoc/></para>
+        /// <para>
+        /// Note: this implementation just checks if the object is an <see cref="IMessage"/>. A child class should
+        /// implement <see cref="WriteBytes(IMessage)"/> to handle serializing the message.
+        /// </para>
+        /// </summary>
         public ValueTask<(bool, byte[])> Write(object obj)
         {
             IMessage message = obj as IMessage;

@@ -12,6 +12,14 @@ using System.Threading.Tasks;
 
 namespace AspCoreProtobufFormatters
 {
+    /// <summary>
+    /// <para>Custom formatter to read a protobuf object from a http request body.</para>
+    /// <para>
+    /// This class mainly handles boilerplate code related to ASP.NET Core, the actual reading is done by a 
+    /// <see cref="IContentReader"/>. By default this class supports <see cref="ProtobufBinFormatter"/> and 
+    /// <see cref="ProtobufJsonFormatter"/> although custom readers can be added.
+    /// </para>
+    /// </summary>
     public class ProtobufInputFormatter : InputFormatter
     {
         private readonly Dictionary<string, IContentReader> _readers = new Dictionary<string, IContentReader>();

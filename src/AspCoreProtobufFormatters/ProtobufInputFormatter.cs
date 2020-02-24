@@ -16,7 +16,7 @@ namespace AspCoreProtobufFormatters
     {
         private readonly Dictionary<string, IContentReader> _readers = new Dictionary<string, IContentReader>();
 
-        public ProtobufInputFormatter() : this(new ProtobufBinFormatter()) { }
+        public ProtobufInputFormatter() : this(new ProtobufBinFormatter(), new ProtobufJsonFormatter()) { }
 
         public ProtobufInputFormatter(params IContentReader[] readers) : base()
         {

@@ -8,52 +8,14 @@ using System.Threading.Tasks;
 
 namespace AspCoreProtobufFormatters.ContentFormatters
 {
-    public class ProtobufBinFormatter : IContentReader, IContentWriter
+    public class ProtobufBinFormatter : BaseProtobufFormatter
     {
-        public string SupportedContentType { get; }
+        public ProtobufBinFormatter() : base(ProtobufFormatterUtils.BinContentType) { }
 
-        public ProtobufBinFormatter() : this("application/x-protobuf") { }
+        public ProtobufBinFormatter(string supportedContentType) : base(supportedContentType) { }
 
-        public ProtobufBinFormatter(string supportedContentType)
-        {
-            SupportedContentType = supportedContentType ?? throw new ArgumentNullException(nameof(supportedContentType));
-        }
+        protected override (bool, IMessage) ParseBytes(MessageParser parser, byte[] bytes) => (true, parser.ParseFrom(bytes));
 
-        public async ValueTask<(bool, IMessage)> Read(Type model, Stream body)
-        {
-            MessageParser parser = model.GetPropertyValue<MessageParser>("Parser");
-
-            if (parser == null)
-            {
-                return (false, null);
-            }
-
-            byte[] bytes;
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                await body.CopyToAsync(ms);
-                bytes = ms.ToArray();
-            }
-
-            if (bytes == null || bytes.Length == 0)
-            {
-                return (false, null);
-            }
-
-            return (true, parser.ParseFrom(bytes));
-        }
-
-        public ValueTask<(bool, byte[])> Write(object obj)
-        {
-            IMessage message = obj as IMessage;
-
-            if (message == null)
-            {
-                return new ValueTask<(bool, byte[])>((false, null));
-            }
-
-            return new ValueTask<(bool, byte[])>((true, message.ToByteArray()));
-        }
+        protected override (bool, byte[]) WriteBytes(IMessage message) => (true, message.ToByteArray());
     }
 }

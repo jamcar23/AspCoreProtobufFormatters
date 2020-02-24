@@ -13,7 +13,7 @@ namespace AspCoreProtobufFormatters
     {
         private readonly Dictionary<string, IContentWriter> _writers = new Dictionary<string, IContentWriter>();
 
-        public ProtobufOutputFormatter() : this(new ProtobufBinFormatter()) { }
+        public ProtobufOutputFormatter() : this(new ProtobufBinFormatter(), new ProtobufJsonFormatter()) { }
 
         public ProtobufOutputFormatter(params IContentWriter[] writers) : base()
         {

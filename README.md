@@ -6,7 +6,7 @@ Custom ASP.NET Core Formatters to support reading and writing Protocol Buffers f
 
 ## Installation
 
-*todo publish to nuget*
+`Install-Package AspCoreProtobufFormatters -Version 1.0.0`
 
 ## Usage
 Inside your normal `Startup.cs` file add the following at the top of the file:

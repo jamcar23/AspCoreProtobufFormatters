@@ -1,0 +1,16 @@
+name: .NET Core
+
+on: 
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build with dotnet
+      run: dotnet build --configuration Release

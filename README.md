@@ -1,6 +1,6 @@
 # AspCoreProtobufFormatters
-![](https://github.com/jamcar23/AspCoreProtobufFormatters/workflows/Build/build.yml/badge.svg)
-![](https://github.com/jamcar23/AspCoreProtobufFormatters/workflows/Nuget%20Publish/publish.yml/badge.svg)
+![](https://github.com/jamcar23/AspCoreProtobufFormatters/workflows/Build/badge.svg)
+![](https://github.com/jamcar23/AspCoreProtobufFormatters/workflows/Nuget%20Publish/badge.svg)
 
 Custom ASP.NET Core Formatters to support reading and writing Protocol Buffers from / to a HTTP request / response.
 

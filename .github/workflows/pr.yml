@@ -1,0 +1,13 @@
+name: Handle PR
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Tests
+      run: dotnet test --Configuration Release

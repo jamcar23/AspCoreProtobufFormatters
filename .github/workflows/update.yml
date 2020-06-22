@@ -1,8 +1,7 @@
 name: Update Dependencies
 on:
-  push:
-    branches:
-      - master
+  schedule:
+    - cron: '0 8 * * 5' # every friday AM 8:00
 jobs:
   update:
     runs-on: ubuntu-latest

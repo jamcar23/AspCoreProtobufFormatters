@@ -9,14 +9,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup NuGet.exe
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-version: 'latest'
+    - name: Install Dotnet Outdated
+      run: dotnet tool install --global dotnet-outdated
     - name: Restore Packages
-      run: nuget restore AspCoreProtobufFormatters.sln
+      run: dotnet restore
     - name: Update Packages
-      run: nuget update src/AspCoreProtobufFormatters/AspCoreProtobufFormatters.csproj
+      run: dotnet outdated -u 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v2
       with:

@@ -1,4 +1,4 @@
-name: Handle PR
+name: Unit Tests
 on:
   push:
     branches: 

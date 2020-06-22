@@ -1,0 +1,24 @@
+name: Update Dependencies
+on:
+  push:
+    branches:
+      - master
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup NuGet.exe
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: 'latest'
+    - name: Restore Packages
+      run: nuget restore AspCoreProtobufFormatters.sln
+    - name: Update Packages
+      run: nuget update AspCoreProtobufFormatters.sln
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        title: Update NuGet Dependencies

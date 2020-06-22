@@ -16,7 +16,7 @@ jobs:
     - name: Restore Packages
       run: nuget restore AspCoreProtobufFormatters.sln
     - name: Update Packages
-      run: nuget update AspCoreProtobufFormatters.sln
+      run: nuget update **/*.csproj
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v2
       with:

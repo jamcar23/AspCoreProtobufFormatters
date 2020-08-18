@@ -1,11 +1,8 @@
 name: Unit Tests
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  check_run:
-    types: [rerequested, requested_action]
+on: [push, pull_request]
+  
+#   check_run:
+#     types: [rerequested, requested_action]
     
 jobs:
   tests:

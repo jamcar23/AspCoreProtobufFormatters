@@ -1,11 +1,9 @@
 name: Unit Tests
 on:
   push:
-    branches: 
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
   check_run:
     types: [rerequested, requested_action]
     

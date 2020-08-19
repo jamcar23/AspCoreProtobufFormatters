@@ -22,3 +22,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         title: Update NuGet Dependencies
         reviewers: jamcar23
+        branch: auto-update-nuget

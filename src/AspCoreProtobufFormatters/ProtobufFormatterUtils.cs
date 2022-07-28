@@ -5,8 +5,9 @@ namespace AspCoreProtobufFormatters
 {
     public static class ProtobufFormatterUtils
     {
-        public static readonly string BinContentType = "application/x-protobuf";
-        public static readonly string JsonContentType = "application/x-protobuf-json";
+        public const string BinContentType = "application/x-protobuf";
+        public const string JsonContentType = "application/x-protobuf-json";
+        public const string ApplicationJsonContentType = "application/json";
 
         public static bool IsProtobuf(Type type)
         {

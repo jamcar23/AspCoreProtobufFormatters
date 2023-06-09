@@ -45,6 +45,6 @@ From there you can use protobufs as an argument to your end point methods. Note:
 
 ## License
 
-Copyright (c) 2020 James Carroll
+Copyright (c) 2023 James Carroll
 
 The full license is available in the [license](./LICENSE.md) file.

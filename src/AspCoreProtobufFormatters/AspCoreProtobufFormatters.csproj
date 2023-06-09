@@ -5,7 +5,8 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>James Carroll</Authors>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Copyright>Copyright (c) 2020 James Carroll (jamcar23)</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2023 James Carroll (jamcar23)</Copyright>
     <PackageProjectUrl>https://github.com/jamcar23/AspCoreProtobufFormatters</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jamcar23/AspCoreProtobufFormatters</RepositoryUrl>
     <Description>Custom formatters to use Protobufs in ASP.NET Core.</Description>
@@ -13,7 +14,6 @@
     <AssemblyOriginatorKeyFile>SharedKey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
     <Version>2.0.0</Version>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,10 @@
 
   <ItemGroup>
     <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
